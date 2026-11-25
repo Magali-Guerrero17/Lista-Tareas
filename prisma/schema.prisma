@@ -1,0 +1,39 @@
+generator client {
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Category {
+  id          Int     @id @default(autoincrement())
+  nombre      String  @unique
+  descripcion String?
+  tasks       Task[]
+
+  @@map("categories")
+}
+
+model Task {
+  id          Int      @id @default(autoincrement())
+  titulo      String
+  descripcion String?
+  prioridad   Int
+  completada  Boolean  @default(false)
+  categoryId  Int      @map("category_id")
+  category    Category @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+
+  @@map("tasks")
+}
+
+model User {
+  id       Int    @id @default(autoincrement())
+  nombre   String
+  email    String @unique
+  password String
+
+  @@map("users")
+}
